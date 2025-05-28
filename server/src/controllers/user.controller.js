@@ -26,7 +26,7 @@ export async function getMyFriends(req, res) {
       .select("friends")
       .populate(
         "friends",
-        "fullName profilePic nativeLanguage learningLanguage"
+        "fullName profilePic nativeLanguage learningLanguage bio location"
       );
 
     res.status(200).json(user.friends);
@@ -88,7 +88,7 @@ export async function sendFriendRequest(req, res) {
 
 export async function acceptFriendRequest(req, res) {
   try {
-    const { id: requestId } = req.params;
+    const { id: requestId } = req.params; // request id
 
     const friendRequest = await FriendRequest.findById(requestId);
 
