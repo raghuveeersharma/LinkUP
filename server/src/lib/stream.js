@@ -18,6 +18,16 @@ export const upsertStreamUser = async (userData) => {
     console.log("error in upsertUser", err);
   }
 };
+export const deleteStreamUser = async (userId) => {
+  try {
+    // ensure userId is a string
+    const userIdStr = userId.toString();
+    await streamClient.deleteUser(userIdStr);
+    console.log("Stream user deleted successfully:", userIdStr);
+  } catch (err) {
+    console.log("error in deleteStreamUser", err);
+  }
+};
 export const generateStreamToken = (userId) => {
   try {
     // ensure userId is a string
