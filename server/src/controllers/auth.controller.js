@@ -42,8 +42,8 @@ export async function signup(req, res) {
     res.cookie("jwt", token, {
       maxAge: 24 * 60 * 60 * 1000, // 1 day
       httpOnly: true, // prevent xss attacks
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "strict", // prevent CSRF attacks
+      secure: true,
+      sameSite: "none", // prevent CSRF attacks
     });
     res.status(201).json({
       message: "User created successfully",
@@ -83,8 +83,8 @@ export async function login(req, res) {
     res.cookie("jwt", token, {
       maxAge: 24 * 60 * 60 * 1000, // 1 day
       httpOnly: true, // prevent xss attacks
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "strict", // prevent CSRF attacks
+      secure: true,
+      sameSite: "none", // prevent CSRF attacks
     });
     res.status(200).json({
       message: "User logged in successfully",
