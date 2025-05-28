@@ -36,7 +36,7 @@ const userSchema = new mongoose.Schema(
       type: String,
       default: "",
     },
-    onBoarding: {
+    isOnboarded: {
       type: Boolean,
       default: false,
     },
