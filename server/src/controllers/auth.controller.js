@@ -1,5 +1,5 @@
 import { upsertStreamUser, deleteStreamUser } from "../lib/stream.js";
-import FriendRequest from "../models/FriendRequest.js";
+import FriendRequest from "../models/friendRequest.js";
 import User from "../models/User.js";
 import jwt from "jsonwebtoken";
 export async function signup(req, res) {
