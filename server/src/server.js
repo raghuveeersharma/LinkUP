@@ -11,7 +11,7 @@ const app = express();
 
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    origin: "https://link-up-git-master-raghuveer-sharmas-projects.vercel.app",
     credentials: true,
   })
 );
