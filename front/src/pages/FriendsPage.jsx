@@ -11,9 +11,6 @@ const FriendsPage = () => {
     queryFn: getUserFriends,
     retry: false,
   });
-  useEffect(() => {
-    console.log("Friends data fetched:", friends);
-  }, []);
 
   return (
     <div className="p-4 sm:p-6 lg:p-8">
