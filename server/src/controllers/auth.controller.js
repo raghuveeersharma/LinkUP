@@ -97,7 +97,12 @@ export async function login(req, res) {
   }
 }
 export function logout(req, res) {
-  res.clearCookie("jwt");
+  res.clearCookie("jwt", {
+    httpOnly: true,
+    secure: true, // required for HTTPS (Render is HTTPS)
+    sameSite: "None", // required for cross-origin cookies
+  });
+
   res
     .status(200)
     .json({ success: true, message: "User logged out successfully" });
