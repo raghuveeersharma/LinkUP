@@ -4,7 +4,6 @@ import { Link } from "react-router";
 import { UsersIcon } from "lucide-react";
 import NoFriendsFound from "../components/NoFriendsFound";
 import FriendCard from "../components/FriendCard";
-import { useEffect } from "react";
 const FriendsPage = () => {
   const { data: friends = [], isLoading: loadingFriends } = useQuery({
     queryKey: ["friends"],

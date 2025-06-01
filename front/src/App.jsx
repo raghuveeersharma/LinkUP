@@ -1,5 +1,5 @@
 import { Navigate, Route, Routes } from "react-router";
-import HomePage from "./pages/HomePage.jsx";
+// import HomePage from "./pages/HomePage.jsx";
 import LoginPage from "./pages/LoginPage.jsx";
 import SignupPage from "./pages/SignupPage.jsx";
 import CallPage from "./pages/CallPage.jsx";
@@ -13,6 +13,10 @@ import Layout from "./components/Layout.jsx";
 import { useThemeStore } from "./store/useThemeStore.js";
 import FriendsPage from "./pages/FriendsPage.jsx";
 import ProfilePage from "./pages/ProfilePage.jsx";
+import { lazy } from "react";
+import { Suspense } from "react";
+
+const HomePage = lazy(() => import("./pages/HomePage.jsx"));
 
 const App = () => {
   const { isLoading, authUser } = useAuthUser();
@@ -30,7 +34,9 @@ const App = () => {
           element={
             isAuthenticated ? (
               <Layout showSidebar={true}>
-                <HomePage />
+                <Suspense fallback={<PageLoader />}>
+                  <HomePage />
+                </Suspense>
               </Layout>
             ) : (
               <Navigate to="/login" />
@@ -54,7 +60,9 @@ const App = () => {
           element={
             isAuthenticated ? (
               <Layout showSidebar={true}>
-                <FriendsPage />
+                <Suspense fallback={<PageLoader />}>
+                  <FriendsPage />
+                </Suspense>
               </Layout>
             ) : (
               <Navigate to="/login" />
@@ -108,7 +116,9 @@ const App = () => {
           element={
             isAuthenticated && isOnboarded ? (
               <Layout showSidebar={false}>
-                <ChatPage />
+                <Suspense fallback={<PageLoader />}>
+                  <ChatPage />
+                </Suspense>
               </Layout>
             ) : (
               <Navigate to={isAuthenticated ? "/onboarding" : "/login"} />
@@ -117,7 +127,15 @@ const App = () => {
         />
         <Route
           path="/call"
-          element={isAuthenticated ? <CallPage /> : <LoginPage />}
+          element={
+            isAuthenticated ? (
+              <Suspense fallback={<PageLoader />}>
+                <CallPage />
+              </Suspense>
+            ) : (
+              <LoginPage />
+            )
+          }
         />
       </Routes>
       <Toaster />

@@ -7,7 +7,6 @@ import {
   UserCheckIcon,
 } from "lucide-react";
 import NoNotificationsFound from "../components/NoNotificationsFound";
-import { useEffect } from "react";
 
 const NotificationsPage = () => {
   const queryClient = useQueryClient();

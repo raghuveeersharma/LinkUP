@@ -15,7 +15,9 @@ import {
 } from "lucide-react";
 import NoFriendsFound from "../components/NoFriendsFound";
 import { capitialize } from "../lib/utils";
-import FriendCard, { getLanguageFlag } from "../components/FriendCard";
+import { lazy, Suspense } from "react";
+import { getLanguageFlag } from "../components/FriendCard";
+const FriendCard = lazy(() => import("../components/FriendCard"));
 const HomePage = () => {
   const [outgoingRequestsIds, setOutgoingRequestsIds] = useState(new Set());
   const { data: friends = [], isLoading: loadingFriends } = useQuery({
@@ -70,11 +72,13 @@ const HomePage = () => {
         ) : friends.length === 0 ? (
           <NoFriendsFound />
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-            {friends.map((friend) => (
-              <FriendCard key={friend._id} friend={friend} />
-            ))}
-          </div>
+          <Suspense fallback={<div>Loading...</div>}>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+              {friends.map((friend) => (
+                <FriendCard key={friend._id} friend={friend} />
+              ))}
+            </div>
+          </Suspense>
         )}
 
         <section>
@@ -111,67 +115,66 @@ const HomePage = () => {
                 const hasRequestBeenSent = outgoingRequestsIds.has(user._id);
 
                 return (
-                  <div
-                    key={user._id}
-                    className="card bg-base-200 hover:shadow-lg transition-all duration-300"
-                  >
-                    <div className="card-body p-5 space-y-4">
-                      <div className="flex items-center gap-3">
-                        <div className="avatar size-16 rounded-full">
-                          <img src={user.profilePic} alt={user.fullName} />
+                  <Suspense key={user._id} fallback={<div>Loading...</div>}>
+                    <div className="card bg-base-200 hover:shadow-lg transition-all duration-300">
+                      <div className="card-body p-5 space-y-4">
+                        <div className="flex items-center gap-3">
+                          <div className="avatar size-16 rounded-full">
+                            <img src={user.profilePic} alt={user.fullName} />
+                          </div>
+
+                          <div>
+                            <h3 className="font-semibold text-lg">
+                              {user.fullName}
+                            </h3>
+                            {user.location && (
+                              <div className="flex items-center text-xs opacity-70 mt-1">
+                                <MapPinIcon className="size-3 mr-1" />
+                                {user.location}
+                              </div>
+                            )}
+                          </div>
                         </div>
 
-                        <div>
-                          <h3 className="font-semibold text-lg">
-                            {user.fullName}
-                          </h3>
-                          {user.location && (
-                            <div className="flex items-center text-xs opacity-70 mt-1">
-                              <MapPinIcon className="size-3 mr-1" />
-                              {user.location}
-                            </div>
-                          )}
+                        {/* Languages with flags */}
+                        <div className="flex flex-wrap gap-1.5">
+                          <span className="badge badge-secondary">
+                            {getLanguageFlag(user.nativeLanguage)}
+                            Native: {capitialize(user.nativeLanguage)}
+                          </span>
+                          <span className="badge badge-outline">
+                            {getLanguageFlag(user.learningLanguage)}
+                            Learning: {capitialize(user.learningLanguage)}
+                          </span>
                         </div>
-                      </div>
 
-                      {/* Languages with flags */}
-                      <div className="flex flex-wrap gap-1.5">
-                        <span className="badge badge-secondary">
-                          {getLanguageFlag(user.nativeLanguage)}
-                          Native: {capitialize(user.nativeLanguage)}
-                        </span>
-                        <span className="badge badge-outline">
-                          {getLanguageFlag(user.learningLanguage)}
-                          Learning: {capitialize(user.learningLanguage)}
-                        </span>
-                      </div>
-
-                      {user.bio && (
-                        <p className="text-sm opacity-70">{user.bio}</p>
-                      )}
-
-                      {/* Action button */}
-                      <button
-                        className={`btn w-full mt-2 ${
-                          hasRequestBeenSent ? "btn-disabled" : "btn-primary"
-                        } `}
-                        onClick={() => sendRequestMutation(user._id)}
-                        disabled={hasRequestBeenSent || isPending}
-                      >
-                        {hasRequestBeenSent ? (
-                          <>
-                            <CheckCircleIcon className="size-4 mr-2" />
-                            Request Sent
-                          </>
-                        ) : (
-                          <>
-                            <UserPlusIcon className="size-4 mr-2" />
-                            Send Friend Request
-                          </>
+                        {user.bio && (
+                          <p className="text-sm opacity-70">{user.bio}</p>
                         )}
-                      </button>
+
+                        {/* Action button */}
+                        <button
+                          className={`btn w-full mt-2 ${
+                            hasRequestBeenSent ? "btn-disabled" : "btn-primary"
+                          } `}
+                          onClick={() => sendRequestMutation(user._id)}
+                          disabled={hasRequestBeenSent || isPending}
+                        >
+                          {hasRequestBeenSent ? (
+                            <>
+                              <CheckCircleIcon className="size-4 mr-2" />
+                              Request Sent
+                            </>
+                          ) : (
+                            <>
+                              <UserPlusIcon className="size-4 mr-2" />
+                              Send Friend Request
+                            </>
+                          )}
+                        </button>
+                      </div>
                     </div>
-                  </div>
+                  </Suspense>
                 );
               })}
             </div>
